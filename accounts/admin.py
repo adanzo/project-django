@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Account
+from .models import Account,UserProfile
 # Register your models here.
 ## we do this class to make the password in the model accounts read only
 #django custome user model
@@ -15,5 +15,11 @@ class AccountAdmin(UserAdmin):
     list_filter = ()
     fieldsets = ()
     
-    
+
+
+
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'city', 'state', 'country')
+
 admin.site.register(Account,AccountAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)

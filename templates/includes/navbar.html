@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <header class="section-header">
     <nav class="navbar p-md-0 navbar-expand-sm navbar-light border-bottom">
     <div class="container">
@@ -7,13 +9,21 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarTop4">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-                 <a href="#" class="nav-link">   English </a>
-                
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link"> USD </a>
-            </li>
+
+        <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.get_full_path| slice:'3:'}}">
+        <select name="language">
+         {% get_current_language as LANGUAGE_CODE %}
+         {% get_available_languages as LANGUAGES %}
+         {% get_language_info_list for LANGUAGES as languages %}
+         {% for language in languages %}
+            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                {{ language.name_local }} ({{ language.code }})
+            </option>
+         {% endfor %}
+        </select>
+        <input type="submit" value="Go">
+        </form>
         </ul>
         <ul class="navbar-nav">
             <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
@@ -46,9 +56,9 @@
         </div> <!-- col.// -->
         <a href="{% url 'store' %}" class="btn btn-outline-primary">Store</a>
         <div class="col-lg  col-md-6 col-sm-12 col">
-            <form action="#" class="search">
+            <form action="{% url 'search' %}" class="search" method='GET'>
                 <div class="input-group w-100">
-                    <input type="text" class="form-control" style="width:60%;" placeholder="Search">
+                    <input type="text" class="form-control" style="width:60%;" placeholder="Search" name="keyword">
                     
                     <div class="input-group-append">
                       <button class="btn btn-primary" type="submit">
@@ -60,16 +70,26 @@
         </div> <!-- col.// -->
         <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
                     <div class="d-flex justify-content-end mb-3 mb-lg-0">
+                        {% if user.id is None %}
                         <div class="widget-header">
                             <small class="title text-muted">Welcome guest!</small>
                             <div> 
-                                <a href="./signin.html">Sign in</a> <span class="dark-transp"> | </span>
-                                <a href="./register.html"> Register</a>
+                                <a href="{% url  'login' %}">Sign in</a> <span class="dark-transp"> | </span>
+                                <a href="{%url 'register' %}"> Register</a>
                             </div>
                         </div>
-                        <a href="./cart.html" class="widget-header pl-3 ml-3">
+                        {% else %}
+                        <div class="widget-header">
+                            <small class="title text-muted">Welcome {{user.first_name}}</small>
+                            <div> 
+                                <a href="{% url 'dashboard' %}">Dashboard</a> <span class="dark-transp"> | </span>
+                                <a href="{%url 'logout' %}"> Logout</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <a href="{%url 'cart'%}" class="widget-header pl-3 ml-3">
                             <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
-                            <span class="badge badge-pill badge-danger notify">0</span>
+                            <span class="badge badge-pill badge-danger notify">{{cart_count}}</span>
                         </a>
                     </div> <!-- widgets-wrap.// -->
                 </div> <!-- col.// -->

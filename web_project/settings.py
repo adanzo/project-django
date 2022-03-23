@@ -9,13 +9,15 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-# pass ---khatab12lole
-#email --- adanzoabi20797@gmail.com
-#username wisam 
+# pass ---12
+#email --- adanzoabi207997@gmail.com
+#username admin 
+from django.utils.translation import gettext as _
 
 from pathlib import Path
 import os
-
+from decouple import config 
+# to secure the sensetive information we use the dot emv file to store them
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5ut%)*(9xkarl_g&2)3!m3n_n*tcxi)q6nymm+k^=6*qk^nzg%'
+SECRET_KEY =config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG =config('DEBUG',default=True,cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['project-env.eba-sygbqyvs.us-west-2.elasticbeanstalk.com']
 
 
 # Application definition
@@ -43,12 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'category',
     'accounts',
-    'store'
+    'store',
+    'carts',
+    'orders',
+    #'admin_honeypot',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',#for translation
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -70,9 +76,11 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.i18n',
                 'django.contrib.messages.context_processors.messages',
                 #tell the templates that we using context_processors
                 'category.context_processors.menu_links',# we can use the def men_links in all the templates 
+                'carts.context_processors.counter',
             ],
         },
     },
@@ -114,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-us'#the primary language for the website
 
 TIME_ZONE = 'UTC'
 
@@ -122,7 +130,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+LANGUAGES = [
+    ('ar', ('Arabic')),
+    ('en', ('English')),
+]
+LOCALE_PATHS=[
+    os.path.join(BASE_DIR,"locale")
+]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -140,7 +154,26 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # media files configuration 
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR/'media'
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    #info is the name of bootstrap class we change this to error 
+    messages.ERROR: 'danger',
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ 
+ 
+#smtp configuration 
+EMAIL_HOST=config('EMAIL_HOST')
+EMAIL_PORT=config('EMAIL_PORT',cast=int)
+EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS=config('EMAIL_USE_TLS',cast=bool)
+
+
+
+
+
