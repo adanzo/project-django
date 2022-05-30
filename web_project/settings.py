@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _
 
 from pathlib import Path
 import os
-from decouple import config 
+#from decouple import config 
 # to secure the sensetive information we use the dot emv file to store them
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,10 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY =config('SECRET_KEY')
+#SECRET_KEY =config('SECRET_KEY')
+SECRET_KEY ='django-insecure-5ut%)*(9xkarl_g&2)3!m3n_n*tcxi)q6nymm+k^=6*qk^nzg%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =config('DEBUG',default=True,cast=bool)
+#DEBUG =config('DEBUG',default=True,cast=bool)
+DEBUG=True
 
 ALLOWED_HOSTS = []
 
@@ -165,13 +167,17 @@ MESSAGE_TAGS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
  
- 
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER='adanzoabi20797@gmail.com'
+EMAIL_HOST_PASSWORD='376673ali'
+EMAIL_USE_TLS=True
 #smtp configuration 
-EMAIL_HOST=config('EMAIL_HOST')
-EMAIL_PORT=config('EMAIL_PORT',cast=int)
-EMAIL_HOST_USER=config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS=config('EMAIL_USE_TLS',cast=bool)
+#EMAIL_HOST=config('EMAIL_HOST')
+#EMAIL_PORT=config('EMAIL_PORT',cast=int)
+#EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+#EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
+#EMAIL_USE_TLS=config('EMAIL_USE_TLS',cast=bool)
 
 
 
